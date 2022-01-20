@@ -1,3 +1,5 @@
+// By creating/exporting a server object in it's own file and running it from index.js, we allow supertest to bind the API to whichever port it wants at runtime.
+
 const express = require('express');
 const server = express();
 const data = require('./data.json')
