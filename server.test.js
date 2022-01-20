@@ -64,13 +64,15 @@ describe('POST /recipes', () => {
   // If running the same test multiple times with different data, you can pass the data as a parameter to .each() and then write the tests as usual.
   // Each item gets passed as the parameter to the test
   test.each(entries)("Should return 400 error if body doesn't include name, ingredients, and instructions", async (entry) => {
-    console.log(entry)
     const response = await request(server).post('/recipes').send(entry);
-    console.log(response.statusCode)
     expect(response.statusCode).toBe(400);
   })
 
-  // Should return 400 error if recipe already exists
+  test('Should return 400 error if recipe already exists', async () => {
+    const postRecipe = { name: "chai", ingredients: "some stuff", instructions: "more stuff" };
+    const response = await request(server).post('/recipes').send(postRecipe);
+    expect(response.statusCode).toBe(400);
+  })
   // Should return 201 if post request succeeds
   // Length of recipes list should increase by 1 if successful
 })
