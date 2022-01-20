@@ -18,9 +18,44 @@ describe('GET /recipes', () => {
     
     expect(recipeNames).toBeInstanceOf(Array);
   });
+
   test("should specify json in the content header type", async () => {
     const response = await request(server).get("/recipes");
 
     expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
   });
 });
+
+describe('GET /recipes/details/:name', () => {
+  test("Should respond with a 200 status code with any name given", async () => {
+    const validNameResponse = await request(server).get("/recipes/details/chai");
+    const invalidNameResponse = await request(server).get("/recipes/details/nonsense");
+
+    expect(validNameResponse.statusCode).toBe(200);
+    expect(invalidNameResponse.statusCode).toBe(200);
+  });
+
+  test("Valid name param should return object with ingredients and number of steps", async () => {
+    debugger;
+    const response = await request(server).get("/recipes/details/chai");
+    const { ingredients, numSteps } = response.body.details;
+
+    expect(ingredients).toBeInstanceOf(Array);
+    expect(numSteps).toEqual(expect.any(Number));
+  });
+
+  test("Should specify json in the content header type", async () => {
+    const response = await request(server).get("/recipes/details/chai");
+
+    expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
+  });
+});
+
+
+
+
+
+
+
+
+
