@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { array } = require('yup');
 const server = require('./server');
 
 it('sanity check', () => {
@@ -6,11 +7,17 @@ it('sanity check', () => {
 });
 
 describe('GET /recipes', () => {
-  test("Should return list of recipe names", async () => {
+  test("Should respond with a 200 status code", async () => {
     const response = await request(server).get("/recipes");
     expect(response.statusCode).toBe(200);
   })
-  // Should respond with a 200 status code
+  // 
+  test("Should return list of recipe names", async () => {
+    const response = await request(server).get("/recipes");
+    const { recipeNames } = response.body;
+    
+    expect(recipeNames).toBeInstanceOf(Array);
+  })
   // should specify json in the content header type
 
 
