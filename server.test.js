@@ -18,6 +18,7 @@ describe('GET /recipes', () => {
     
     expect(recipeNames).toBeInstanceOf(Array);
   });
+
   test("should specify json in the content header type", async () => {
     const response = await request(server).get("/recipes");
 
@@ -34,7 +35,14 @@ describe('GET /recipes/details/:name', () => {
     expect(invalidNameResponse.statusCode).toBe(200);
   });
 
-  
+  test("Valid name param should return object with ingredients and number of steps", async () => {
+    debugger;
+    const response = await request(server).get("/recipes/details/chai");
+    const { ingredients, numSteps } = response.body.details;
+
+    expect(ingredients).toBeInstanceOf(Array);
+    expect(numSteps).toEqual(expect.any(Number));
+  })
 })
 
 

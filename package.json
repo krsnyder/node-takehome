@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand",
+    "debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "start": "nodemon index.js"
   },
   "keywords": [],
