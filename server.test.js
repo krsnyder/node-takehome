@@ -69,7 +69,8 @@ describe('POST /recipes', () => {
   })
 
   test('Should return 400 error if recipe already exists', async () => {
-    const postRecipe = { name: "chai", ingredients: "some stuff", instructions: "more stuff" };
+    const postRecipe = { name: "some food", ingredients: "some stuff", instructions: "more stuff" };
+    await request(server).post('/recipes').send(postRecipe);
     const response = await request(server).post('/recipes').send(postRecipe);
     expect(response.statusCode).toBe(400);
   })
