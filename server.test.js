@@ -51,6 +51,13 @@ describe('GET /recipes/details/:name', () => {
   });
 });
 
+describe('POST /recipes', () => {
+  // test("Should return 400 error if body doesn't include name, ingredients, and instructions")
+
+  // Should return 400 error if recipe already exists
+  // Should return 201 if post request succeeds
+  // Length of recipes list should increase by 1 if successful
+})
 
 
 
