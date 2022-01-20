@@ -6,6 +6,7 @@ const data = require('./data.json')
 
 server.use(express.json());
 
+// GET route that returns all recipes
 server.get('/recipes', (req, res) => {
   let response = {
     recipeNames: data.recipes.map(recipe => {
@@ -13,6 +14,23 @@ server.get('/recipes', (req, res) => {
     })
   };
   res.status(200).json(response);
+});
+
+// GET route that takes a recipe name as a string param and returns the ingredients and number of steps
+server.get('/recipes/details/:name', (req, res) => {
+  const { name } = req.params;
+  const recipeDetails = data.recipes.filter(x => x.name == name);
+  if (recipeDetails.length == 0) {
+    res.status(200).json();
+  } else {
+    let response = {
+      "details": {
+        "ingredients": recipeDetails[0].ingredients,
+        "numSteps": recipeDetails[0].instructions.length
+      }
+    };
+    res.status(200).json(response)
+  }
 });
 
 module.exports = server;
