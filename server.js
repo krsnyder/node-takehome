@@ -28,8 +28,8 @@ server.get('/recipes/details/:name', (req, res) => {
         "ingredients": recipeDetails[0].ingredients,
         "numSteps": recipeDetails[0].instructions.length
       }
-    }
-    
+    };
+    res.status(200).json(response)
   }
 });
 
