@@ -42,8 +42,14 @@ describe('GET /recipes/details/:name', () => {
 
     expect(ingredients).toBeInstanceOf(Array);
     expect(numSteps).toEqual(expect.any(Number));
-  })
-})
+  });
+
+  test("Should specify json in the content header type", async () => {
+    const response = await request(server).get("/recipes/details/chai");
+
+    expect(response.headers['content-type']).toEqual(expect.stringContaining("json"));
+  });
+});
 
 
 
