@@ -2,7 +2,8 @@
 
 const express = require('express');
 const server = express();
-const data = require('./data.json')
+const data = require('./data.json');
+const { verifyReqBody, recipeExists } = require('./middleware');
 
 server.use(express.json());
 
@@ -19,7 +20,7 @@ server.get('/recipes', (req, res) => {
 // GET route that takes a recipe name as a string param and returns the ingredients and number of steps
 server.get('/recipes/details/:name', (req, res) => {
   const { name } = req.params;
-  const recipeDetails = data.recipes.filter(x => x.name == name);
+  const recipeDetails = data.recipes.filter(x => x.name.toLowerCase() == name.toLowerCase());
   if (recipeDetails.length == 0) {
     res.status(200).json();
   } else {
@@ -34,31 +35,25 @@ server.get('/recipes/details/:name', (req, res) => {
 });
 
 // POST route for adding new recipes
-server.post('/recipes', (req, res) => {
-  const { name, ingredients, instructions } = req.body;
-
-  // Verifying that all required data is included
-  if (!name || !ingredients || !instructions) {
+server.post('/recipes', verifyReqBody, (req, res) => {
+  const { name } = req.body;
+  let recipeIndex = data.recipes.findIndex(x => x.name.toLowerCase() == name.toLowerCase());
+  
+  if (recipeIndex != -1) {
     res.status(400).json({
-      "error": "Recipe must include a name, ingredients, and instructions!"
+      "error": "Recipe already exists"
     });
   } else {
-    let recipeIndex = data.recipes.findIndex(x => x.name == name);
-    
-    if (recipeIndex != -1) {
-      res.status(400).json({
-        "error": "Recipe already exists"
-      });
-    } else {
-      data.recipes.push(req.body);
+    data.recipes.push(req.body);
 
-      res.status(201).json();
-    };
+    res.status(201).json();
   };
-
 
 });
 
-
+// PUT route for modifying recipes
+server.put('/recipes/details/:name', verifyReqBody, recipeExists, (req, res) => {
+  res.status(200).json();
+})
 
 module.exports = server;
