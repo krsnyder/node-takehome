@@ -3,7 +3,7 @@
 const express = require('express');
 const server = express();
 const data = require('./data.json');
-const { verifyReqBody } = require('./middleware');
+const { verifyReqBody, recipeExists } = require('./middleware');
 
 server.use(express.json());
 
@@ -37,7 +37,7 @@ server.get('/recipes/details/:name', (req, res) => {
 // POST route for adding new recipes
 server.post('/recipes', verifyReqBody, (req, res) => {
   const { name } = req.body;
-  let recipeIndex = data.recipes.findIndex(x => x.name == name);
+  let recipeIndex = data.recipes.findIndex(x => x.name.toLowerCase() == name.toLowerCase());
   
   if (recipeIndex != -1) {
     res.status(400).json({
@@ -52,8 +52,8 @@ server.post('/recipes', verifyReqBody, (req, res) => {
 });
 
 // PUT route for modifying recipes
-server.put('/recipes/detais/:name', verifyReqBody, (req, res) => {
-
+server.put('/recipes/details/:name', verifyReqBody, recipeExists, (req, res) => {
+  res.status(200).json();
 })
 
 module.exports = server;

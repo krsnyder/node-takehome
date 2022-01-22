@@ -13,6 +13,20 @@ const verifyReqBody = (req, res, next) => {
   };
 }
 
+const recipeExists = (req, res, next) => {
+  const { name } = req.params;
+
+  let results = (data.recipes.filter(obj => obj.name.toLowerCase() == name.toLowerCase()));
+
+  if (results.length == 0) {
+    res.status(404).json({
+      "error": "Recipe does not exist"
+    });
+  } else {
+    next();
+  }
+}
 module.exports = {
-  verifyReqBody
+  verifyReqBody,
+  recipeExists
 }
