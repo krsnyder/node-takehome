@@ -20,7 +20,7 @@ server.get('/recipes', (req, res) => {
 // GET route that takes a recipe name as a string param and returns the ingredients and number of steps
 server.get('/recipes/details/:name', (req, res) => {
   const { name } = req.params;
-  const recipeDetails = data.recipes.filter(x => x.name == name);
+  const recipeDetails = data.recipes.filter(x => x.name.toLowerCase() == name.toLowerCase());
   if (recipeDetails.length == 0) {
     res.status(200).json();
   } else {
@@ -52,6 +52,8 @@ server.post('/recipes', verifyReqBody, (req, res) => {
 });
 
 // PUT route for modifying recipes
-server.put('/recipes/detais/:name')
+server.put('/recipes/detais/:name', verifyReqBody, (req, res) => {
+
+})
 
 module.exports = server;
