@@ -2,7 +2,8 @@
 
 const express = require('express');
 const server = express();
-const data = require('./data.json')
+const data = require('./data.json');
+const { verifyReqBody } = require('./middleware');
 
 server.use(express.json());
 
@@ -34,31 +35,23 @@ server.get('/recipes/details/:name', (req, res) => {
 });
 
 // POST route for adding new recipes
-server.post('/recipes', (req, res) => {
-  const { name, ingredients, instructions } = req.body;
-
-  // Verifying that all required data is included
-  if (!name || !ingredients || !instructions) {
+server.post('/recipes', verifyReqBody, (req, res) => {
+  const { name } = req.body;
+  let recipeIndex = data.recipes.findIndex(x => x.name == name);
+  
+  if (recipeIndex != -1) {
     res.status(400).json({
-      "error": "Recipe must include a name, ingredients, and instructions!"
+      "error": "Recipe already exists"
     });
   } else {
-    let recipeIndex = data.recipes.findIndex(x => x.name == name);
-    
-    if (recipeIndex != -1) {
-      res.status(400).json({
-        "error": "Recipe already exists"
-      });
-    } else {
-      data.recipes.push(req.body);
+    data.recipes.push(req.body);
 
-      res.status(201).json();
-    };
+    res.status(201).json();
   };
-
 
 });
 
-
+// PUT route for modifying recipes
+server.put('/recipes/detais/:name')
 
 module.exports = server;
