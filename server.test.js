@@ -1,14 +1,19 @@
 const request = require('supertest');
-const { array } = require('yup');
 const server = require('./server');
 
-const entries = [
+const BadEntries = [
   { name: "Burger" },
   { name: "Burger", ingredients: ["buns", "ground beef"] },
   { ingredients: ["buns", "ground beef"], instructions: ["cook", "serve"] },
   { name: "Burger", instructions: ["cook", "serve"] },
   { instructions: ["cook", "serve"] }
 ];
+
+const goodEntry = {
+  name: "Burger",
+  ingredients: ["buns", "ground beef"],
+  instructions: ["cook", "serve"]
+};
 
 it('sanity check', () => {
   expect(true).not.toBe(false);
@@ -63,19 +68,39 @@ describe('POST /recipes', () => {
   // This test uses the each() method of jest
   // If running the same test multiple times with different data, you can pass the data as a parameter to .each() and then write the tests as usual.
   // Each item gets passed as the parameter to the test
-  test.each(entries)("Should return 400 error if body doesn't include name, ingredients, and instructions", async (entry) => {
+
+
+  test.each(BadEntries)("Should return 400 error if body doesn't include name, ingredients, and instructions", async (entry) => {
     const response = await request(server).post('/recipes').send(entry);
+    
     expect(response.statusCode).toBe(400);
   })
 
   test('Should return 400 error if recipe already exists', async () => {
-    const postRecipe = { name: "some food", ingredients: "some stuff", instructions: "more stuff" };
-    await request(server).post('/recipes').send(postRecipe);
-    const response = await request(server).post('/recipes').send(postRecipe);
+    await request(server).post('/recipes').send(goodEntry);
+    const response = await request(server).post('/recipes').send(goodEntry);
+
     expect(response.statusCode).toBe(400);
   })
-  // Should return 201 if post request succeeds
-  // Length of recipes list should increase by 1 if successful
+  test("Should return 201 if post request succeeds", async () => {
+    const postBody = { name: "name", ingredients: "ingredients", instructions: "instructions" };
+    const response = await request(server).post('/recipes').send(postBody);
+
+    expect(response.statusCode).toBe(201)
+  })
+  test("Length of recipes list should increase by 1 if successful", async () => {
+    const getRecipes = await request(server).get('/recipes');
+    const initialNumberOfRecipes = (getRecipes.body.recipeNames.length);
+    await request(server).post('/recipes').send({
+      name: "Omlette",
+      ingredients: ["Eggs", "Cheese", "Veggies"],
+      instructions: ["Sautee veggies", "Add eggs", "Add Cheese"]
+    });
+    
+    const newRecipes = await request(server).get('/recipes');
+    const finalNumberOfRecipes = (newRecipes.body.recipeNames.length);
+    expect(finalNumberOfRecipes).toEqual(initialNumberOfRecipes + 1);
+  })
 })
 
 
