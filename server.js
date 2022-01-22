@@ -53,7 +53,11 @@ server.post('/recipes', verifyReqBody, (req, res) => {
 
 // PUT route for modifying recipes
 server.put('/recipes/details/:name', verifyReqBody, recipeExists, (req, res) => {
-  res.status(200).json();
+  const updatedRecipe = req.body;
+  const recipeIndex = data.recipes.findIndex(x => x.name.toLowerCase() == updatedRecipe.name.toLowerCase());
+
+  data.recipes[recipeIndex] = updatedRecipe;
+  res.status(204).json();
 })
 
 module.exports = server;
