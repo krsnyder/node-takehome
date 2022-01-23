@@ -19,11 +19,18 @@ server.get('/recipes', (req, res) => {
 
 // GET route that takes a recipe name as a string param and returns the ingredients and number of steps
 server.get('/recipes/details/:name', recipeExists, (req, res) => {
-  const { recipeDetails } = req;
+  const { ingredients, instructions } = req.recipeDetails;
+  let numSteps;
+  if (Array.isArray(instructions)) {
+    numSteps = instructions.length;
+  } else {
+    numSteps = 1;
+  }
+
   let response = {
     "details": {
-      "ingredients": recipeDetails.ingredients,
-      "numSteps": recipeDetails.instructions.length
+      "ingredients": ingredients,
+      "numSteps": numSteps
     }
   };
   res.status(200).json(response)

@@ -109,9 +109,32 @@ describe('PUT /recipes/details/:name', () => {
     
     expect(response.statusCode).toEqual(404);
   })
-  // Should return error: Recipe does not exist
-  // Should modify the resource in the db
-  // Returns 204 on success
+  test("Should return error: Recipe does not exist", async () => {
+    const response = await request(server).get("/recipes/details/fakerecipe");
+
+    expect(response.body.error).toMatch("Recipe does not exist");
+  })
+  test("Should modify the resource in the db", async () => {
+    await request(server).post("/recipes").send({
+      name: "rice", ingredients: "rice", instructions: "boil"
+    });
+    const original = await request(server).get("/recipes/details/rice");
+
+    await request(server).put("/recipes/details/rice").send({ name: "rice", ingredients: "rice", instructions: ["boil", "eat"] });
+
+    const modified = await request(server).get('/recipes/details/rice');
+
+    expect(modified.body.details).not.toEqual(original.body.details);
+  })
+  test("Returns 204 on success", async () => {
+    const response = await request(server).put("/recipes/details/rice").send({
+      name: "rice",
+      ingredients: ["rice", "water"],
+      instructions: ["boil", "eat"]
+    });
+
+    expect(response.statusCode).toBe(204);
+  })
 })
 
 
