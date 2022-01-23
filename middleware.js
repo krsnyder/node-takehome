@@ -16,13 +16,14 @@ const verifyReqBody = (req, res, next) => {
 const recipeExists = (req, res, next) => {
   const { name } = req.params;
 
-  let results = (data.recipes.filter(obj => obj.name.toLowerCase() == name.toLowerCase()));
+  let recipeDetails = (data.recipes.filter(obj => obj.name.toLowerCase() == name.toLowerCase()));
 
-  if (results.length == 0) {
+  if (recipeDetails.length == 0) {
     res.status(404).json({
       "error": "Recipe does not exist"
     });
   } else {
+    req.recipeDetails = recipeDetails[0];
     next();
   }
 }

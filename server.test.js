@@ -40,12 +40,12 @@ describe('GET /recipes', () => {
 });
 
 describe('GET /recipes/details/:name', () => {
-  test("Should respond with a 200 status code with any name given", async () => {
+  test("Should respond with a 200 status code with valid recipe and 404 with invalid recipe", async () => {
     const validNameResponse = await request(server).get("/recipes/details/chai");
     const invalidNameResponse = await request(server).get("/recipes/details/nonsense");
 
     expect(validNameResponse.statusCode).toBe(200);
-    expect(invalidNameResponse.statusCode).toBe(200);
+    expect(invalidNameResponse.statusCode).toBe(404);
   });
 
   test("Valid name param should return object with ingredients and number of steps", async () => {
@@ -103,7 +103,16 @@ describe('POST /recipes', () => {
   })
 })
 
-
+describe('PUT /recipes/details/:name', () => {
+  test("Should return 404 if recipe doesn't exist", async () => {
+    const response = await request(server).get('/recipes/details/fakerecipe');
+    
+    expect(response.statusCode).toEqual(404);
+  })
+  // Should return error: Recipe does not exist
+  // Should modify the resource in the db
+  // Returns 204 on success
+})
 
 
 
