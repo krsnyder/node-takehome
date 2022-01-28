@@ -1,7 +1,7 @@
 {
   "recipes": [
     {
-      "name": "scrambledEggs",
+      "name": "Scrambled Eggs",
       "ingredients": [
         "1 tsp oil",
         "2 eggs",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "name": "garlicPasta",
+      "name": "Garlic Pasta",
       "ingredients": [
         "500mL water",
         "100g spaghetti",
