@@ -6,12 +6,14 @@
   "scripts": {
     "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand",
     "debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "start": "nodemon index.js"
+    "start": "node index.js",
+    "server": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^14.3.2",
     "express": "^4.17.2",
     "httpie": "^1.1.2"
   },
